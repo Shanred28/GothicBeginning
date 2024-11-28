@@ -19,7 +19,7 @@ namespace CodeBase.Services.StateMachine.LevelStateMachine.LevelState
         public LevelBootstrapMainMenuState(ILevelStateSwitcher levelStateSwitcher, IConfigsProvider configsProvider, IWindowsProvider windowsProvider, IGameFactory gameFactory)
         {
             Debug.Log("LEVEL: Init");
-            Debug.Log(windowsProvider);
+
             _gameFactory = gameFactory;
             _levelStateSwitcher = levelStateSwitcher;
             _configsProvider = configsProvider;

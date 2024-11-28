@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeBase.Configs.Interface;
 using CodeBase.Configs.Level;
+using CodeBase.Configs.Player;
 using CodeBase.Configs.Scene;
 using CodeBase.Configs.WindowsConfig;
 using CodeBase.UI.MainUI;
@@ -15,6 +16,7 @@ namespace CodeBase.Configs
         private const string LevelsConfigsPath = "Configs/Levels";
         private const string WindowsConfigsPath = "Configs/Windows";
         private const string ScenesConfigsPath = "Configs/Scene";
+        private const string PlayerConfigsPath = "Configs/Player/PlayerConfig";
 
        // private Dictionary<EnemyId, EnemyConfig> _enemies;
         private Dictionary<string, LevelConfig> _levels;
@@ -23,6 +25,7 @@ namespace CodeBase.Configs
 
         private SceneConfig[] _configsSceneList;
         private LevelConfig[] _levelsList;
+        private PlayerCharacterSetting _playerConfig;
         
         public int LevelAmount => _levelsList.Length;
         
@@ -34,8 +37,14 @@ namespace CodeBase.Configs
             _configsSceneList = Resources.LoadAll<SceneConfig>(ScenesConfigsPath).ToArray();
             _levelsList = Resources.LoadAll<LevelConfig>(LevelsConfigsPath).ToArray();
             _levels = _levelsList.ToDictionary(x => x.LevelName, x => x);
+            _playerConfig = Resources.Load<PlayerCharacterSetting>(PlayerConfigsPath);
         }
-        
+
+        public PlayerCharacterSetting GetPlayerConfig()
+        {
+            return _playerConfig;
+        }
+
         /*public EnemyConfig GetEnemyConfig(EnemyId id)
         {
             return _enemies[id];

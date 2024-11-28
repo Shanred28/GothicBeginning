@@ -1,4 +1,5 @@
 ﻿using CodeBase.Configs.Level;
+using CodeBase.Configs.Player;
 using CodeBase.Configs.Scene;
 using CodeBase.Configs.WindowsConfig;
 using CodeBase.Services;
@@ -11,6 +12,7 @@ namespace CodeBase.Configs.Interface
         void Load();
         //EnemyConfig GetEnemyConfig(EnemyId id);
         
+        public PlayerCharacterSetting GetPlayerConfig();
         public SceneConfig GetSceneConfig(string nameScene);
         public LevelConfig GetLevelConfig(int index);
         int LevelAmount { get; }

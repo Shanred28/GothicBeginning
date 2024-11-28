@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CodeBase.GamePlay.Player
 {
-    [Serializable]
+    /*[Serializable]
     public class CharacterAnimatorParametersName
     {
         public string NormolizeMovementX;
@@ -22,7 +22,7 @@ namespace CodeBase.GamePlay.Player
     {
         public string Name;
         public float Duration;
-    }
+    }*/
     
     
     public class PlayerInfoHolder : MonoBehaviour

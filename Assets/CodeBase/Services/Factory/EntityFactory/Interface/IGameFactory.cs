@@ -1,10 +1,11 @@
+using CodeBase.Configs.Player;
 using UnityEngine;
 
 namespace CodeBase.Services.Factory.EntityFactory.Interface
 {
     public interface IGameFactory : IService
     {
-        GameObject CreateHero(Vector3 position, Quaternion rotation);
+        GameObject CreateHero();
         
        // GameObject CreateEnemy(EnemyId id, Vector3 position, Quaternion rotation);
 

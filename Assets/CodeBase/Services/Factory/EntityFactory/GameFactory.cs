@@ -1,4 +1,5 @@
 using CodeBase.Configs.Interface;
+using CodeBase.GamePlay.Player;
 using CodeBase.Services.AssetManager;
 using CodeBase.Services.Factory.EntityFactory.Interface;
 using Lean.Pool;
@@ -18,14 +19,18 @@ namespace CodeBase.Services.Factory.EntityFactory
             _configProvider = configProvider;
         }
         
-        public GameObject CreateHero(Vector3 position, Quaternion rotation)
+        public GameObject CreateHero()
         {
-           // GameObject heroPrefab = _assetProvider.GetPrefab<GameObject>(AsseetPath.HeroPath);
-            //HeroObject = _diContainer.InstantiateGameObject(heroPrefab);
+            var playerCharacterSettingConfig = _configProvider.GetPlayerConfig();
+            
+            HeroObject = LeanPool.Spawn(_assetProvider.GetPrefab<GameObject>(playerCharacterSettingConfig.PathPlayerPrefabe),playerCharacterSettingConfig.defaultSpawnPosition,Quaternion.identity);
+            GameObject cameraObject = LeanPool.Spawn(_assetProvider.GetPrefab<GameObject>(playerCharacterSettingConfig.PathCameraPrefab));
+            
+            PlayerLogic playerLogic = HeroObject.GetComponent<PlayerLogic>();
+            ThirdPersonCamera playerCamera = cameraObject.GetComponent<ThirdPersonCamera>();
 
-            HeroObject.transform.position = position;
-            HeroObject.transform.rotation = rotation;
-            //HeroHeals = HeroObject.GetComponent<HeroHealth>();
+            playerCamera.InitializeCamera(playerLogic.CameraFollowPaint,playerLogic.transform);
+            playerLogic.InitializeHeroPlayer(playerCharacterSettingConfig,playerCamera);
             
             return HeroObject;
         }

@@ -16,34 +16,35 @@ public class CharacterAnimationState : ILogic, ILateUpdateable
     
     private readonly CharacterController _targetCharacterController;
     private readonly CharacterMovementHuman _characterMovement;
-    private Transform _targetTransform;
+    private readonly Transform _targetTransform;
     
-    private CharacterAnimatorParametersName _animatorParametersName;
+    private readonly CharacterAnimatorParametersName _animatorParametersName;
     
-    private AnimationCrossFadeParameters _jumpIdleFade;
-    private AnimationCrossFadeParameters _jumpMoveFade;
-    private AnimationCrossFadeParameters _fallFade;
+    private readonly AnimationCrossFadeParameters _jumpIdleFade;
+    private readonly AnimationCrossFadeParameters _jumpMoveFade;
+    private readonly AnimationCrossFadeParameters _fallFade;
     
     private readonly Animator _targetAnimator;
-    private float _minDistanceToGroundByFall;
+    private readonly float _minDistanceToGroundByFall;
     private Vector3 _inputControl;
     
-    public CharacterAnimationState(CharacterMovementHuman characterMovementController, CharacterController targetCharacterController, Animator targetAnimator)
+    public CharacterAnimationState(CharacterMovementHuman characterMovementController, CharacterController targetCharacterController, Animator targetAnimator, Transform targetTransform,CharacterAnimatorParametersName animatorParametersName,
+        AnimationCrossFadeParameters jumpIdleFade,AnimationCrossFadeParameters jumpMoveFade,AnimationCrossFadeParameters fallFade,float minDistanceToGroundByFall)
     {
         _characterMovement = characterMovementController;
         _targetCharacterController = targetCharacterController;
         _targetAnimator = targetAnimator;
+        _targetTransform = targetTransform;
+        _animatorParametersName = animatorParametersName;
+
+        _jumpIdleFade = jumpIdleFade;
+        _jumpMoveFade = jumpMoveFade;
+        _fallFade = fallFade;
+        _minDistanceToGroundByFall = minDistanceToGroundByFall;
     }
 
     public void Enter()
     {
-        _targetTransform = _playerInfoHolder.PlayerTransform;
-        _animatorParametersName = _playerInfoHolder.CharacterAnimatorParametersName;
-        _jumpIdleFade = _playerInfoHolder.JumpIdleFade;
-        _jumpMoveFade = _playerInfoHolder.JumpMoveFade;
-        _fallFade = _playerInfoHolder.FallFade;
-        _minDistanceToGroundByFall = _playerInfoHolder.MinDistanceToGroundByFall;
-        
         SubscribeReactiveProperty();
         Ticker.RegisterLateUpdateable(this);
     }

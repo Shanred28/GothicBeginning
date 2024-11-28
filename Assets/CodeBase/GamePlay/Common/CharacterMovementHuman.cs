@@ -1,15 +1,18 @@
 using CodeBase.Common.Interface;
 using CodeBase.Common.Ticker;
 using CodeBase.Common.Ticker.Interfaces;
+using CodeBase.Configs.Player;
 using CodeBase.GamePlay.Player;
 using UniRx;
 using UnityEngine;
+
 
 namespace CodeBase.GamePlay.Common
 {
     public class CharacterMovementHuman : IUpdateable,IFixedUpdateable, ILogic
     {
-        public float DistanceToGround => _distanceToGround;
+        public float DistanceToGround { get; private set; }
+
         public float CurrentSpeed => GetCurrentSpeedByState();
         public Vector3 TargetDirectionControl;
 
@@ -28,10 +31,9 @@ namespace CodeBase.GamePlay.Common
         public Vector3 DirectionControl;
         private Vector3 _movementDirections;
         
-        private CharacterController _characterController;
-        private Transform _controllingModel;
+        private readonly CharacterController _characterController;
+        private readonly Transform _controllingModel;
         private float _accelerationRate;
-        private float _distanceToGround;
         private float _walkSpeed;
         private float _runSpeed;
         private float _jumpSpeed;
@@ -42,11 +44,16 @@ namespace CodeBase.GamePlay.Common
         
         private float _distanceForRayToGround;
         private float _distanceForRaySlopeSlide;
-
-        public CharacterMovementHuman(CharacterController characterController, Transform targetModelTransform)
+        
+        private readonly ThirdPersonCamera _thirdPersonCamera;
+        private readonly PlayerCharacterSetting _playerCharacterSettingConfig;
+        
+        public CharacterMovementHuman(CharacterController characterController, Transform targetModelTransform,PlayerCharacterSetting playerCharacterSetting,ThirdPersonCamera thirdPersonCamera)
         {
             _characterController = characterController;
             _controllingModel = targetModelTransform;
+            _playerCharacterSettingConfig = playerCharacterSetting;
+            _thirdPersonCamera = thirdPersonCamera;
             
             IsSprint = new BoolReactiveProperty();
             IsCrouch = new BoolReactiveProperty();
@@ -56,23 +63,30 @@ namespace CodeBase.GamePlay.Common
         
         public void Enter()
         {
-            /*_walkSpeed = _playerInfoHolder.WalkSpeed;
-            _runSpeed = _playerInfoHolder.RunSpeed;
-            _jumpSpeed = _playerInfoHolder.JumpSpeed;
-            _accelerationRate = _playerInfoHolder.AccelerationRate;
-            _ySpeed = _playerInfoHolder.SpeedSlider;
-            _distanceForRayToGround = _playerInfoHolder.DistanceForRayToGround;
-            _distanceForRaySlopeSlide = _playerInfoHolder.DistanceForRaySlopeSlide;*/
-            
+            SetPropertyConfig();
+
             Ticker.RegisterUpdateable(this);
             Ticker.RegisterFixedUpdateable(this);
         }
+        
+        private void SetPropertyConfig()
+        {
+            _walkSpeed = _playerCharacterSettingConfig.WalkSpeed;
+            _runSpeed = _playerCharacterSettingConfig.RunSpeed;
+            _jumpSpeed = _playerCharacterSettingConfig.JumpSpeed;
+            _accelerationRate = _playerCharacterSettingConfig.AccelerationRate;
+            _ySpeed = _playerCharacterSettingConfig.SpeedSlider;
+            _distanceForRayToGround = _playerCharacterSettingConfig.DistanceForRayToGround;
+            _distanceForRaySlopeSlide = _playerCharacterSettingConfig.DistanceForRaySlopeSlide;
+        }
+
 
         public void OnUpdate()
         {
             SetSlopeSlide();
             UpdateDistanceToGround();
             TargetControlMove();
+            CheckMove();
         }
 
         public void OnFixedUpdate()
@@ -99,12 +113,15 @@ namespace CodeBase.GamePlay.Common
 
                 _movementDirections = _controllingModel.TransformDirection(_movementDirections);
                 _movementDirections += Physics.gravity * Time.fixedDeltaTime;
-               
+                
+                
+                _characterController.Move(_movementDirections * (_accelerationRate * Time.fixedDeltaTime));
+            }
+            else
+            {
+                _movementDirections += Physics.gravity * Time.fixedDeltaTime;
                 _characterController.Move(_movementDirections * Time.fixedDeltaTime);
             }
-            
-            _movementDirections += Physics.gravity * Time.fixedDeltaTime;
-            _characterController.Move(_movementDirections * Time.fixedDeltaTime);
             
             if (_isSliding)
             {
@@ -114,7 +131,9 @@ namespace CodeBase.GamePlay.Common
                 _characterController.Move(velocity * Time.deltaTime);
             }
         }
-        
+
+        private void CheckMove() => _thirdPersonCamera.TryMovePlayer(_characterController.velocity.magnitude  > 0.1f);
+
         private void TargetControlMove()
         {
             DirectionControl = Vector3.MoveTowards(DirectionControl, TargetDirectionControl, Time.deltaTime * _accelerationRate);
@@ -132,12 +151,7 @@ namespace CodeBase.GamePlay.Common
             if (IsGrounded.Value == false) return;
             if (IsCrouch.Value) return;
 
-            if (IsSprint.Value)
-            {
-                IsSprint.Value = false;
-            }
-            else 
-                IsSprint.Value = true;
+            IsSprint.Value = !IsSprint.Value;
         }
         
         public void Jump()
@@ -147,13 +161,10 @@ namespace CodeBase.GamePlay.Common
 
             IsJump = true;
         }
-        
-        public float GetCurrentSpeedByState()
-        {
-            if (IsSprint.Value)
-                return _runSpeed;
 
-            return _walkSpeed;
+        private float GetCurrentSpeedByState()
+        {
+            return IsSprint.Value ? _runSpeed : _walkSpeed;
         }
         
         private void SetSlopeSlide()
@@ -172,7 +183,7 @@ namespace CodeBase.GamePlay.Common
             if (_isSliding)
             { 
                 //TODO
-                _slopeSlideVelocity -= _slopeSlideVelocity * Time.deltaTime * 3;
+                _slopeSlideVelocity -= _slopeSlideVelocity * (Time.deltaTime * 3);
 
                 if (_slopeSlideVelocity.magnitude > 1)
                 {
@@ -186,10 +197,10 @@ namespace CodeBase.GamePlay.Common
         {
             if (Physics.Raycast(_controllingModel.position, Vector3.down, out RaycastHit hit, _distanceForRayToGround))
             {
-                _distanceToGround = Vector3.Distance(_controllingModel.position, hit.point);
+                DistanceToGround = Vector3.Distance(_controllingModel.position, hit.point);
             }
             
-            IsGrounded.Value = _characterController.isGrounded || _distanceToGround < 0.09f;
+            IsGrounded.Value = _characterController.isGrounded || DistanceToGround < 0.09f;
         }
     }
 }
