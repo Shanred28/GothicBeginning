@@ -4,6 +4,8 @@ using CodeBase.Services.AssetManager;
 using CodeBase.Services.Factory.EntityFactory.Interface;
 using Lean.Pool;
 using UnityEngine;
+using VContainer;
+using VContainer.Unity;
 
 namespace CodeBase.Services.Factory.EntityFactory
 {
@@ -12,11 +14,13 @@ namespace CodeBase.Services.Factory.EntityFactory
         public GameObject HeroObject { get; private set; }
         private readonly IAssetProvider _assetProvider;
         private readonly IConfigsProvider _configProvider;
+        private readonly IObjectResolver _container;
 
-        public GameFactory(IAssetProvider assetProvider, IConfigsProvider configProvider)
+        public GameFactory(IAssetProvider assetProvider, IConfigsProvider configProvider,IObjectResolver container)
         {
             _assetProvider = assetProvider;
             _configProvider = configProvider;
+            _container = container;
         }
         
         public GameObject CreateHero()
@@ -29,8 +33,11 @@ namespace CodeBase.Services.Factory.EntityFactory
             PlayerLogic playerLogic = HeroObject.GetComponent<PlayerLogic>();
             ThirdPersonCamera playerCamera = cameraObject.GetComponent<ThirdPersonCamera>();
 
+            //InjectToGameObject(HeroObject);
+            
             playerCamera.InitializeCamera(playerLogic.CameraFollowPaint,playerLogic.transform);
             playerLogic.InitializeHeroPlayer(playerCharacterSettingConfig,playerCamera);
+            
             
             return HeroObject;
         }
@@ -71,6 +78,11 @@ namespace CodeBase.Services.Factory.EntityFactory
 
             return enemy;*/
             return null;
+        }
+        
+        private void InjectToGameObject(GameObject gameObject)
+        {
+            _container.InjectGameObject(gameObject);
         }
     }
 }

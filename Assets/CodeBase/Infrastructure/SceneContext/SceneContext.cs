@@ -9,16 +9,8 @@ namespace CodeBase.Infrastructure.SceneContext
     {
         protected override void Awake()
         {
-            
             ProjectContextFactory.TryCreate();
-
-            //ProjectContext.InjectToInstallers(monoInstallers);
-            Debug.Log("SceneContext: Bind");
-            //InstallBindings();
             base.Awake();
-            //ProjectContext.InjectToAllMonoBehaviour();
-          //  Debug.Log("SceneContext: Init");
-           // OnBindResolved();
         }
         
         protected override void Configure(IContainerBuilder builder)

@@ -4,6 +4,7 @@
     {
         Unknown,
         MainMenuWindow,
-        PlayMenuWindow
+        PlayMenuWindow,
+        InventoryWindow
     }
 }

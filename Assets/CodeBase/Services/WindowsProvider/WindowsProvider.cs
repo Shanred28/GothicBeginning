@@ -2,6 +2,7 @@ using CodeBase.Configs.Interface;
 using CodeBase.Configs.WindowsConfig;
 using CodeBase.Services.Factory.UIFactory.Interface;
 using CodeBase.UI.MainUI;
+using UnityEngine;
 
 namespace CodeBase.Services.WindowsProvider
 {

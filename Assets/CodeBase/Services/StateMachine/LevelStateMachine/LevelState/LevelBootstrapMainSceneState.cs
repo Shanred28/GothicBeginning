@@ -27,6 +27,7 @@ namespace CodeBase.Services.StateMachine.LevelStateMachine.LevelState
         public void Enter()
         {
             _gameFactory.CreateHero();
+            _windowsProvider.OpenWindow(WindowMainUIId.InventoryWindow);
             
             /*string sceneName = SceneManager.GetActiveScene().name;
             LevelConfig levelConfig = _configsProvider.GetLevelConfig(sceneName);*/

@@ -21,7 +21,7 @@ namespace CodeBase.Services.Factory.UIFactory
         {
             _container = container;
         }
-
+        
         public void CreateUIRoot()
         {
             UIRoot = new GameObject(UIRootName).transform;
@@ -35,8 +35,7 @@ namespace CodeBase.Services.Factory.UIFactory
         private TPresenter CreateWindow<TWindow, TPresenter>(WindowConfig config) where TWindow : WindowsBase
             where TPresenter : WindowsPresenterBase<TWindow>
         {
-            TWindow window = InstantiateGameObject(config.prefab).GetComponent<TWindow>();
-            window.transform.SetParent(UIRoot);
+            TWindow window = InstantiateGameObject(config.prefab,UIRoot).GetComponent<TWindow>();
             window.SetTitle(config.title);
 
             TPresenter presenter = _container.Resolve<TPresenter>();
@@ -45,9 +44,9 @@ namespace CodeBase.Services.Factory.UIFactory
             return presenter;
         }
 
-        private GameObject InstantiateGameObject(GameObject prefab)
+        private GameObject InstantiateGameObject(GameObject prefab, Transform parent)
         {
-            GameObject newObj = LeanPool.Spawn(prefab);
+            GameObject newObj = LeanPool.Spawn(prefab,parent);
             InjectToGameObject(newObj);
             return newObj;
         }

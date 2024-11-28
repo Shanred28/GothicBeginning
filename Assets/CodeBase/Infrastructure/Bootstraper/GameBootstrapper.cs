@@ -20,7 +20,6 @@ namespace CodeBase.Infrastructure.Bootstraper
             _bootstrapGameState = bootstrapGameState;
             _loadNextLevelGameState = loadNextLevelGameState;
             _loadMainMenuGameState = loadMainMenuGameState;
-            Debug.Log("Constructor inject");
         }
 
         void IStartable.Start()

@@ -15,6 +15,7 @@ using CodeBase.Services.StateMachine.GameStateMachine;
 using CodeBase.Services.StateMachine.GameStateMachine.GameState;
 using CodeBase.Services.StateMachine.GameStateMachine.Interface;
 using CodeBase.UI.MainUI;
+using UnityEngine.InputSystem;
 
 namespace CodeBase.Infrastructure.Installers
 {

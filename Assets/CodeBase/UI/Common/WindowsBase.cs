@@ -1,13 +1,13 @@
+using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace CodeBase.UI.Common
 {
     public abstract class WindowsBase : MonoBehaviour
     {
-        public event UnityAction Cleanuped;
+        public event Action Cleanuped;
 
         [SerializeField] private Button closeButton;
         [SerializeField] private TMP_Text titleText;
@@ -15,12 +15,12 @@ namespace CodeBase.UI.Common
         private void Awake()
         {
             OnAwake();
-            closeButton?.onClick.AddListener(OnClose);
+            closeButton?.onClick.AddListener(Close);
         }
 
         private void OnDestroy()
         {
-            closeButton?.onClick?.RemoveListener(OnClose);
+            closeButton?.onClick?.RemoveListener(Close);
             OnCleanup();
             Cleanuped?.Invoke();
         }

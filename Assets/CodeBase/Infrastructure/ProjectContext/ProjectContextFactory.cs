@@ -8,13 +8,10 @@ namespace CodeBase.Infrastructure.ProjectContext
         
         public static void TryCreate()
         {
-            
             if(ProjectContext.Initialized) return;
             
-            
             ProjectContext prefab = TryGetPrefab();
-
-            Debug.Log(prefab);
+            
             if (prefab != null)
             {
                 Instantiate(prefab);

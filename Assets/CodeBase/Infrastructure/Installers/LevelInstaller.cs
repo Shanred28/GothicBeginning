@@ -2,7 +2,6 @@ using CodeBase.Infrastructure.Bootstraper;
 using CodeBase.Services.StateMachine.LevelStateMachine;
 using CodeBase.Services.StateMachine.LevelStateMachine.Interface;
 using CodeBase.Services.StateMachine.LevelStateMachine.LevelState;
-using CodeBase.UI.MainUI;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
