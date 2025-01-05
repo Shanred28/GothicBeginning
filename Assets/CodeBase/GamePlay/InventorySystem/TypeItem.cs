@@ -11,6 +11,7 @@ namespace CodeBase.GamePlay.InventorySystem
         Scroll,
         Quest,
         Documents,
-        Trash
+        Trash,
+        Jewelry
     }
 }

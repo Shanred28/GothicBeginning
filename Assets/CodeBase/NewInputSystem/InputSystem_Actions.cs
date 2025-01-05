@@ -107,6 +107,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Arm/Disarm_weapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd70a9e6-047d-44e3-b44e-39d83ef78afe"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -492,6 +501,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d83a275-7022-4ac6-84bf-e0b907830011"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Arm/Disarm_weapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1108,6 +1128,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_ArmDisarm_weapon = m_Player.FindAction("Arm/Disarm_weapon", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1197,6 +1218,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_ArmDisarm_weapon;
     public struct PlayerActions
     {
         private @InputSystem_Actions m_Wrapper;
@@ -1210,6 +1232,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         public InputAction @Previous => m_Wrapper.m_Player_Previous;
         public InputAction @Next => m_Wrapper.m_Player_Next;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        public InputAction @ArmDisarm_weapon => m_Wrapper.m_Player_ArmDisarm_weapon;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1246,6 +1269,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @ArmDisarm_weapon.started += instance.OnArmDisarm_weapon;
+            @ArmDisarm_weapon.performed += instance.OnArmDisarm_weapon;
+            @ArmDisarm_weapon.canceled += instance.OnArmDisarm_weapon;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1277,6 +1303,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @ArmDisarm_weapon.started -= instance.OnArmDisarm_weapon;
+            @ArmDisarm_weapon.performed -= instance.OnArmDisarm_weapon;
+            @ArmDisarm_weapon.canceled -= instance.OnArmDisarm_weapon;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1476,6 +1505,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         void OnPrevious(InputAction.CallbackContext context);
         void OnNext(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
+        void OnArmDisarm_weapon(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

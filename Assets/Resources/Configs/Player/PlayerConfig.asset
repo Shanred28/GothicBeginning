@@ -21,4 +21,5 @@ MonoBehaviour:
   SpeedSlider: -10
   DistanceForRayToGround: 2
   DistanceForRaySlopeSlide: 1
+  timerIntervalInteractionRaycast: 0.3
   defaultSpawnPosition: {x: 498.892, y: 63.02, z: 220.034}

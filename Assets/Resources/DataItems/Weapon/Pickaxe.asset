@@ -15,5 +15,9 @@ MonoBehaviour:
   itemName: Pickaxe
   icon: {fileID: 21300000, guid: b8c47eafe99bbbf4da6244d7aacdfb42, type: 3}
   isStackable: 0
+  dollSlotType: 4
   itemType: 1
+  weaponType: 1
+  staffType: 0
+  jewelryType: 0
   prefab: {fileID: 8012523200689840391, guid: 27963a37bab787c47ac99223a6ed410b, type: 3}

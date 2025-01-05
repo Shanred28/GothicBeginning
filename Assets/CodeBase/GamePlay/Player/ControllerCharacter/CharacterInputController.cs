@@ -17,17 +17,21 @@ namespace CodeBase.GamePlay.Player.ControllerCharacter
         private readonly ThirdPersonCamera _thirdPersonCamera;
         private readonly InteractionWorld _interactionWorld;
         private readonly Inventory _inventory;
-        private InventoryWindows _inventoryWindows;
+        private readonly InventoryWindows _inventoryWindows;
+        private readonly PlayerLogic _playerLogic;
 
 
-        public CharacterInputController(CharacterMovementHuman characterMovement, ThirdPersonCamera thirdPersonCamera,InputSystem_Actions inputKeyBoard,InteractionWorld interactionWorld,Inventory inventory,InventoryWindows inventoryWindows)
+        public CharacterInputController(CharacterMovementHuman characterMovement, ThirdPersonCamera thirdPersonCamera,
+            InputSystem_Actions inputKeyBoard, InteractionWorld interactionWorld, Inventory inventory,
+            InventoryWindows inventoryWindows, PlayerLogic playerLogic)
         {
             _characterMovement = characterMovement;
             _thirdPersonCamera = thirdPersonCamera;
             _inputKeyBoard = inputKeyBoard;
             _interactionWorld = interactionWorld;
-            _inventory =inventory;
+            _inventory = inventory;
             _inventoryWindows = inventoryWindows;
+            _playerLogic = playerLogic;
         }
 
         public void Enter()
@@ -37,15 +41,23 @@ namespace CodeBase.GamePlay.Player.ControllerCharacter
             _inputKeyBoard.Player.Jump.started += OnJump;
             _inputKeyBoard.Player.Sprint.started += OnSprint;
             _inputKeyBoard.Player.Interact.started += OnInteract;
+            _inputKeyBoard.Player.ArmDisarm_weapon.started += OnArmDisarmWeapon;
             _inputKeyBoard.UI.OpenInventary.started += OnOpenInventory;
-            
+
             Ticker.RegisterUpdateable(this);
+        }
+
+        private void OnArmDisarmWeapon(InputAction.CallbackContext obj)
+        {
+            _playerLogic.ArmDisarmEquippedWeapon();
         }
 
         public void OnUpdate()
         {
-            _characterMovement.TargetDirectionControl = new Vector3(_inputKeyBoard.Player.Move.ReadValue<Vector2>().x, 0,  _inputKeyBoard.Player.Move.ReadValue<Vector2>().y);
-            _thirdPersonCamera.RotationControl = new Vector2(_inputKeyBoard.Player.Look.ReadValue<Vector2>().x, _inputKeyBoard.Player.Look.ReadValue<Vector2>().y);
+            _characterMovement.TargetDirectionControl = new Vector3(_inputKeyBoard.Player.Move.ReadValue<Vector2>().x,
+                0, _inputKeyBoard.Player.Move.ReadValue<Vector2>().y);
+            _thirdPersonCamera.RotationControl = new Vector2(_inputKeyBoard.Player.Look.ReadValue<Vector2>().x,
+                _inputKeyBoard.Player.Look.ReadValue<Vector2>().y);
         }
 
         private void OnSprint(InputAction.CallbackContext obj)
@@ -60,23 +72,24 @@ namespace CodeBase.GamePlay.Player.ControllerCharacter
 
         private void OnInteract(InputAction.CallbackContext obj)
         {
-            Debug.Log(_interactionWorld);
-            
-            if (_interactionWorld.TryItemInteract())
-            {
-                _inventory.AddItem(_interactionWorld.TryItemInteract().itemSo);
-                _interactionWorld.TryItemInteract().PickUp();
-            }
-            else
-            {
-                Debug.Log("No Interact");
-            }
+            if (!_interactionWorld.TryItemInteract()) return;
+
+            _inventory.AddItem(_interactionWorld.TryItemInteract().itemSo);
+            _interactionWorld.TryItemInteract().PickUp();
         }
 
         private void OnOpenInventory(InputAction.CallbackContext obj)
         {
             _inventoryWindows.OpenInventory();
-            _inputKeyBoard.Player.Disable();
+
+            if (_inputKeyBoard.Player.enabled)
+            {
+                _inputKeyBoard.Player.Disable();
+            }
+            else
+            {
+                _inputKeyBoard.Player.Enable();
+            }
         }
 
         public void Exit()

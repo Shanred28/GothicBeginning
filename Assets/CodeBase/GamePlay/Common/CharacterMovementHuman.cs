@@ -162,6 +162,13 @@ namespace CodeBase.GamePlay.Common
             IsJump = true;
         }
 
+        public void SetFightState()
+        {
+            if (IsFight.Value) return;
+            
+            IsFight.Value = true;
+        }
+
         private float GetCurrentSpeedByState()
         {
             return IsSprint.Value ? _runSpeed : _walkSpeed;

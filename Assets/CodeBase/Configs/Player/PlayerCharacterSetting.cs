@@ -15,6 +15,7 @@ namespace CodeBase.Configs.Player
         public float SpeedSlider;
         public float DistanceForRayToGround;
         public float DistanceForRaySlopeSlide;
+        public float timerIntervalInteractionRaycast;
         
         public Vector3 defaultSpawnPosition;
     }

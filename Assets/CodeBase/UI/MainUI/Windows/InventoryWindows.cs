@@ -12,6 +12,7 @@ namespace CodeBase.UI.MainUI.Windows
 
         [SerializeField] private GameObject inventoryPanel;
         [SerializeField] private InventorySlot slotsPrefab;
+        [SerializeField] private InventoryDollManager dollManager;
 
         private Inventory _inventory;
         private List<InventorySlot> _slots = new List<InventorySlot>();
@@ -24,7 +25,7 @@ namespace CodeBase.UI.MainUI.Windows
         public void AddItem(ItemSo itemSo)
         {
             InventorySlot slot = LeanPool.Spawn(slotsPrefab,itemsParent);
-            slot.AddItem(itemSo);
+            slot.AddItem(itemSo,dollManager);
             _slots.Add(slot);
         }
     }

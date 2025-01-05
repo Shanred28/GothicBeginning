@@ -5,18 +5,18 @@ namespace CodeBase.GamePlay.Player.GUI.HUD
 {
     public class UIHudPlayer : MonoBehaviour
     {
-        [SerializeField] private GameObject interactiblePanel;
+        [SerializeField] private GameObject interactablePanel;
         [SerializeField] private TextMeshProUGUI textName;
 
-        public void ShowInteractiblePanel(string nameObject)
+        public void ShowInteractablePanel(string nameObject)
         {
-            interactiblePanel.SetActive(true);
+            interactablePanel.SetActive(true);
             textName.text = nameObject;
         }
 
-        public void CleanInteractiblePanel()
+        public void CleanInteractablePanel()
         {
-            interactiblePanel.SetActive(false);
+            interactablePanel.SetActive(false);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace CodeBase.GamePlay.InventorySystem
 
         private List<ItemSo> _items = new List<ItemSo>();
         private bool _isChangedInventory;
-        private InventoryWindows _inventoryWindows;
+        private readonly InventoryWindows _inventoryWindows;
 
 
         public Inventory(InventoryWindows inventoryWindows)

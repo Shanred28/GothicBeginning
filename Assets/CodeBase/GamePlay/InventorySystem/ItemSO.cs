@@ -8,7 +8,11 @@ namespace CodeBase.GamePlay.InventorySystem
         public string itemName;
         public Sprite icon;
         public bool isStackable;
+        public TypeDollSlot dollSlotType;
         public TypeItem itemType;
+        public TypeWeapon weaponType;
+        public TypeWornStaff staffType;
+        public TypeJewelry jewelryType;
         public GameObject prefab;
     }
 }
